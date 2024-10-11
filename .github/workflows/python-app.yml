@@ -1,0 +1,38 @@
+name: Python application CI
+
+# Trigger workflow on push or pull request to the 'main' branch
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# Define the jobs that will run in this workflow
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Runs the job on the latest Ubuntu virtual machine
+
+    steps:
+    # Checkout the repository to the runner
+    - uses: actions/checkout@v2
+
+    # Set up Python environment
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'  # You can specify the version of Python you want
+
+    # Install dependencies via Makefile
+    - name: Install dependencies
+      run: make install
+
+    # Run the web application
+    - name: Run application
+      run: |
+        make run &  # Run the Flask server in the background
+        sleep 10    # Wait 10 seconds for the server to start
+
+    # Optional: Test if the server is running
+    - name: Test application
+      run: curl -s http://localhost:3000 || exit 1
+
