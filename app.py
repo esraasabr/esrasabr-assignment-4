@@ -49,3 +49,8 @@ def search():
         'scores': scores       # The similarity scores for the bar chart
     })
     # return render_template('results.html', query=query, documents=[newsgroups.data[i] for i in top_docs], scores=scores, zip=zip)
+
+@app.route('/health', methods=['GET'])
+def health_check():
+    return "OK", 200
+

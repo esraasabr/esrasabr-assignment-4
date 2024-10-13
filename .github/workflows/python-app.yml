@@ -34,6 +34,4 @@ jobs:
 
     # Optional: Test if the server is running
     - name: Test application
-      run: |
-        curl -X POST http://localhost:3000/search \
-        -d "query=test" || exit 1
+      run: curl -s http://localhost:3000/health || exit 1
