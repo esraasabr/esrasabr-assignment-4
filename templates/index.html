@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LSA Search Engine</title>
+    <link rel="stylesheet" href="/static/style.css"?v=1>
+    <script src="/static/script.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container"> 
+        <h1 class="title">Latent Semantic Analysis (LSA) Search Engine</h1>
+        
+        <!-- Query Input Field -->
+        <form action="/search" method="post" class="searchForm" id="searchForm">  <!-- Added action and method -->
+            <label for="query">Enter your search query:</label>
+            <input type="text" id="query" name="query" required>
+            <button type="submit" class="search-btn">Search</button>
+        </form>
+
+        <!-- Results Section -->
+        <div id="results"></div>
+
+    </div>
+
+    <!-- Bar Chart for Cosine Similarity -->
+    <canvas id="similarityChart"></canvas>
+
+    <script>
+        // This script will handle form submission and display results
+        document.getElementById('searchForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const query = document.getElementById('query').value;
+
+            // Send POST request to the search route
+            const response = await fetch('/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',  // Use this content type
+                },
+                body: new URLSearchParams({
+                    'query': query
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json(); // Assuming results are returned as HTML
+                document.getElementById('results').innerHTML = data.html; // Update the results section
+
+                 // Update the chart with similarity scores
+                 const ctx = document.getElementById('similarityChart').getContext('2d');
+                const similarityScores = data.scores; // Assuming scores are in the returned JSON
+
+                // Create the bar chart
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: similarityScores.map((_, idx) => `Document ${idx + 1}`),
+                        datasets: [{
+                            label: 'Cosine Similarity',
+                            data: similarityScores,
+                            backgroundColor: 'rgba(119, 129, 92, 0.7)', // Sage green background
+                            borderColor: 'rgba(119, 129, 92, 1)', // Sage green border
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true // Y-axis starts at 0
+                            }
+                        }
+                    }
+                });
+            }
+             else {
+                document.getElementById('results').innerHTML = 'Error: ' + response.statusText;
+            }
+        });
+    </script>
+</body>
+</html>
+

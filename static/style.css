@@ -1,0 +1,64 @@
+/* Center the container */
+.container {
+    text-align: center;
+    margin-left: 200px;
+    margin: 50 auto;
+    max-width: 1000px;
+}
+
+/* Style for the title */
+.title {
+    text-align: center;
+    color: #3c583e; /* Sage green */
+    font-size: 2.3em;
+    margin-bottom: 20px;
+}
+
+/* Style for the search form */
+.search-form input[type="text"]{
+    align-items: center;
+    margin: 40px 0;
+    font-size: 1.2em;
+    width: 80%; /* Adjust the width of the input field */
+    max-width: 400px; /* Limit the width for larger screens */
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Style for the search button */
+.search-btn {
+    background-color: #3c583e; /* Sage green */
+    color: #ffffff;
+    border: none;
+    padding: 2px 22px;
+    font-size: 1.0em;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.search-btn:hover {
+    background-color: #3c583e; /* Slightly darker sage green */
+}
+
+/* Style for the search results */
+#results {
+    margin-top: 20px;
+    margin-left: 50px;
+}
+
+/* Style for each search result */
+.search-result {
+    text-align: left;
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.1); /* Soft shadow */
+}
+
+/* Optional: Add some style for the similarity score */
+.similarity-score {
+    color: #77815C; /* Sage green */
+    font-weight: bold;
+}
+

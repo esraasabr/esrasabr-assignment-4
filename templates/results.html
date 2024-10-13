@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js library -->
+</head>
+<body>
+    <h1>Search Results for "{{ query }}"</h1>
+<div id="results">
+        {% if documents %}
+                {% for document, score in zip(documents, scores) %}
+                <div class="search-result">
+            
+                <p class="doc-number"><strong>Document {{ loop.index }} </strong></p> <!-- Document number at the top -->
+                <p class="document">{{ document }}</p>
+                <p class="similarity-score"><strong>Similarity:</strong> {{ score }}</p> <!-- Similarity at the bottom -->
+                    
+                </div>
+                {% endfor %}
+</div>
+
+
+<!-- Bar Chart for Cosine Similarity -->
+<h2>Cosine Similarity of Top Documents</h2>
+<canvas id="similarityChart" width="400" height="200"></canvas> <!-- Bar chart container -->
+
+{% else %}
+    <p>No documents found.</p>
+{% endif %}
+    </div>
+
+    <a href="/">Back to search</a>
+
+<!-- Script to render the bar chart using Chart.js -->
+{% if scores %}
+<script>
+    // Retrieve scores passed from the server
+    const similarityScores = JSON.parse(document.getElementById('results').getAttribute('data-scores'));
+    console.log(similarityScores)
+    const ctx = document.getElementById('similarityChart').getContext('2d');
+
+    // Create the bar chart
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: similarityScores.map((_, idx) => `Document ${idx + 1}`), // Label each bar as "Document 1", "Document 2", etc.
+            datasets: [{
+                label: 'Cosine Similarity',
+                data: scores, // Use the similarity scores
+                backgroundColor: 'rgba(119, 129, 92, 0.7)', // Sage green background
+                borderColor: 'rgba(119, 129, 92, 1)', // Sage green border
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true // Y-axis starts at 0
+                }
+            }
+        }
+    });
+    </script>
+    {% endif %}
+</body>
+</html>
