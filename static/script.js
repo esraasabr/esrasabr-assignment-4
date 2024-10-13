@@ -4,6 +4,12 @@ document.getElementById('searchForm').addEventListener('submit', async function 
     // Get the query from the input field
     const query = document.getElementById('query').value;
 
+    if (!query) {
+        alert("Please enter a search query.");  // Handle empty query case
+        return;
+    }
+
+
     // Send query to Flask backend using POST request
     const response = await fetch('/search', {
         method: 'POST',

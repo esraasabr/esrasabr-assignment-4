@@ -33,7 +33,16 @@ def index():
 @app.route('/search', methods=['POST'])
 def search():
     query = request.form['query']
-    query_reduced = process_query(query)
+    if not query:  # Check if the query is empty
+        app.logger.debug("400 Error: Missing query")
+        return jsonify({"Bad Request: Missing query"}), 400
+    
+    try:
+        query_reduced = process_query(query)
+    except Exception as e:
+        app.logger.error(f"Error processing query: {e}")
+        return jsonify({'error': 'Internal Server Error: Unable to process query'}), 500
+    
 
     top_docs, scores = get_top_documents(query_reduced, X_reduced)
     scores = scores.tolist() if isinstance(scores, np.ndarray) else scores
@@ -53,4 +62,7 @@ def search():
 @app.route('/health', methods=['GET'])
 def health_check():
     return "OK", 200
+
+if __name__ == "__main__":
+    app.run(port=3000)  # Ensures Flask runs on port 3000 and is accessible from outside localhost
 

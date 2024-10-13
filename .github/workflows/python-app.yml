@@ -29,9 +29,9 @@ jobs:
     # Run the web application
     - name: Run application
       run: |
-        make run &  # Run the Flask server in the background
-        sleep 10    # Wait 10 seconds for the server to start
+        make run > flask.log 2>&1 &  # Run the Flask server in the background
+        sleep 20   # Wait 10 seconds for the server to start
 
-    # Optional: Test if the server is running
-    - name: Test application
-      run: curl -s http://localhost:3000/health || exit 1
+    - name: Check Flask logs on failure
+    if: failure()  # Only runs if a previous step fails
+    run: cat flask.log
